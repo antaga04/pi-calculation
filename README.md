@@ -6,6 +6,31 @@ serial version using standard C;
 parallel version using POSIX threads (it should take the number of threads as a program argument).
 Test the serial and parallel programs on a multi-core/mutli-processor machine. Pick a number of iterations that will allow the serial version to run for few (2-5) seconds. Compare the performance of the POSIX thread version tested with different number of threads (e.g. 1, 2, 4 and 8) with the performance of the serial version. The 'time' shell command can be used to measure the execution times.
 
+## How to run program
+
+- Step 1
+
+  ```bash
+  gcc -o serial_pi serial_pi.c
+  gcc -o parallel_pi parallel_pi.c
+  ```
+
+- Step 2:
+
+  - Step 2.1
+
+    ```bash
+    time ./serial_pi 100000000
+    ```
+
+  - Step 2.2
+
+    ```bash
+    time ./parallel_pi 100000000 1
+    ```
+
+    where the first arg is the number of loops to calculate Pi and the second arg is the number of threads.
+
 ## Analysis of Results
 
 Let's break down the results for both the serial and parallel versions of the program:
@@ -45,7 +70,7 @@ Computed Pi value: 3.141592643589326
 ### Parallel Version (8 thread)
 
 ```sh
-time ./parallel_pi 100000000 8                                  
+time ./parallel_pi 100000000 8
 Computed Pi value: 3.141592643589880
 ./parallel_pi 100000000 8  0,47s user 0,00s system 671% cpu 0,071 total
 ```
@@ -106,19 +131,27 @@ Computed Pi value: 3.141592643589880
 
 ### Key Observations
 
-1. **Accuracy**: All versions (serial and parallel) produced Pi values that are very close to each other, indicating that the parallelization did not affect the computation accuracy.
+1. **Accuracy**: All versions (serial and parallel) produced Pi values that are very close to each other, indicating that the parallelization did not affect the computation accuracy much.
 
 2. **Performance**:
+
    - The serial version took the longest time to complete (`0.904 seconds`).
-   - The parallel version with 4 threads performed the best, taking only `0.332 seconds`.
+   - The parallel version with 8 threads performed the best, taking only `0.071 seconds`.
    - As the number of threads decreases, the performance gets closer to the serial version, with 1 thread essentially matching the serial version's performance (`0.379 seconds`).
 
 3. **CPU Utilization**:
    - The serial version used only `40%` of the CPU's capacity, indicating it was not fully utilizing the available CPU cores.
    - The parallel version with 4 threads used `113%` of the CPU's capacity, showing that it utilized more than one core effectively.
    - The parallel version with 2 threads used `197%` of the CPU's capacity, indicating it effectively used two cores.
+   - The parallel version with 8 threads used `671%` of the CPU's capacity, indicating it effectively used two cores.
 
 ### Conclusion
 
 - **Scalability**: The parallel version scales well with the number of threads, reducing the total elapsed time significantly when using multiple threads.
-- **Optimal Threads**: The optimal number of threads seems to be 4 for your current hardware and problem size. More threads might yield diminishing returns due to overhead or limitations in parallelization.
+- **Optimal Threads**: The optimal number of threads seems to be 4 or 8. More threads might yield diminishing returns due to overhead or limitations in parallelization.
+- **Anotations**: When the number of loops is incremented the accuracy improves; but so does the time.
+
+## Team
+
+- Jorge Ortega Izquierdo
+- Adrián Anta Gil
